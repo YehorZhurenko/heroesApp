@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchHeroes } from '../redux/slices/heroSlice';
 
 const Pagination = () => {
+  console.log('Pagination rendered');
   const buttons = [];
 
   const dispatch = useDispatch();

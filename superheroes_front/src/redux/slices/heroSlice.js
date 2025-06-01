@@ -3,10 +3,8 @@ import axios from 'axios';
 
 export const fetchHeroes = createAsyncThunk('hero/fetchHeroes', async (params, thunkAPI) => {
   const page = params.page || 1;
-  const state = thunkAPI.getState();
 
-  console.log('state');
-  console.log(state);
+  console.log(`fetch heroes for page ${page}`);
 
   const heroUrl = `http://localhost:3000/heroes/?page=${page}`;
   const res = await fetch(heroUrl).then((res) => res.json());
