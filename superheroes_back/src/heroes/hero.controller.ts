@@ -20,7 +20,9 @@ export class HeroController {
   constructor(private heroSerivce: HeroService) {}
 
   @Get()
-  async getAllHeroes(@Query() query: EQuery): Promise<Hero[]> {
+  async getAllHeroes(
+    @Query() query: EQuery,
+  ): Promise<{ heroes: Hero[]; totalPages: number }> {
     return this.heroSerivce.findAll(query);
   }
 

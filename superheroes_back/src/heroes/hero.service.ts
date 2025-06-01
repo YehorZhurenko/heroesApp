@@ -12,13 +12,16 @@ export class HeroService {
     private heroModel: mongoose.Model<Hero>,
   ) {}
 
-  async findAll(query: Query): Promise<Hero[]> {
-    const resPerPage = 2;
+  async findAll(query: Query): Promise<{ heroes: Hero[]; totalPages: number }> {
+    const totalDocs = await this.heroModel.countDocuments();
+    const totalPages = Math.ceil(totalDocs / 5);
+
+    const resPerPage = 5;
     const currPage = Number(query.page) || 1;
     const skip = resPerPage * (currPage - 1);
 
     const heroes = await this.heroModel.find().limit(resPerPage).skip(skip);
-    return heroes;
+    return { heroes, totalPages };
   }
 
   async findById(id: string): Promise<Hero> {
