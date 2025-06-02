@@ -1,98 +1,94 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Superhero Database Web Application
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Objective
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+This project is a web application to manage a superhero database. It allows users to perform CRUD operations on superheroes, including creating, editing, deleting, and viewing superheroes with detailed information and images.
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Superhero Model
 
-## Project setup
+Each superhero consists of the following fields:
 
-```bash
-$ npm install
-```
+- **nickname**: e.g. `Superman`
+- **real_name**: e.g. `Clark Kent`
+- **origin_description**: A detailed backstory of the superhero.
+- **superpowers**: List or description of superpowers.
+- **catch_phrase**: e.g. `"Look, up in the sky, it's a bird, it's a plane, it's Superman!"`
+- **images**: A collection of images representing the superhero.
 
-## Compile and run the project
+---
 
-```bash
-# development
-$ npm run start
+## Functional Requirements
 
-# watch mode
-$ npm run start:dev
+The application provides the following functionalities:
 
-# production mode
-$ npm run start:prod
-```
+- Create, edit, and delete a superhero.
+- When creating or editing, assign and remove images from a superhero.
+- List all superheroes showing:
+  - One image per superhero,
+  - Nickname,
+  - Pagination with 5 superheroes per page.
+- View detailed information and all images of a particular superhero.
 
-## Run tests
+---
 
-```bash
-# unit tests
-$ npm run test
+## Technical Stack
 
-# e2e tests
-$ npm run test:e2e
+- **Backend:** Node.js with Express.js (or Nest.js)
+- **Frontend:** React
+- **Testing:** Unit tests included for main logic (if implemented)
+- **State management:** (Explain here if you used Redux, Context API, or other)
+- **Async handling:** Middleware for asynchronous operations (e.g. Redux Thunk or Saga)
 
-# test coverage
-$ npm run test:cov
-```
+---
 
-## Deployment
+## How to Run
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+1. Clone the repository:
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+   ```sh
+   git clone https://github.com/YehorZhurenko/heroesApp
+   cd superhero-database
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+   ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+2. Install backend dependencies and start the server::
 
-## Resources
+   ```sh
+   cd superheroes_back
+   npm install
+   npm run start:dev
+   ```
 
-Check out a few resources that may come in handy when working with NestJS:
+3. Install frontend dependencies:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+   ```sh
+   cd ../superheroes_front
+   npm install
+   npm run dev
+   ```
 
-## Support
+4. Open your browser and navigate to http://localhost:3000
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+> **Note:** All environment variables (such as the MongoDB URI and Cloudinary storage keys) are hardcoded for easier project setup.  
+> The developer is aware that this is not a best practice, but given that this is a training/test project and will only be used by reviewers, this approach was chosen for simplicity.
 
-## Stay in touch
+> **Backend Notes:**  
+> The project uses MongoDB as the database, along with the Mongoose library for schema modeling.  
+> GraphQL was intentionally not used, as the structure and size of the superhero documents are relatively small, and REST was deemed sufficient for this case.  
+> Despite the absence of NestJS guards and interceptors at this stage, the backend remains **type-safe** thanks to the use of strongly typed **DTO (Data Transfer Object) files**.  
+> There are also plans to add **NestJS guards and interceptors**, as well as potentially implement **authentication** — for example, restricting access to superhero data to specific users like Nick Fury and Lex Luthor.
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+> **Frontend Notes:**  
+> Styling is planned to be improved in the future — due to time constraints, the main focus was placed on the technical implementation.  
+> **Redux** was used for state management (not Redux Toolkit), as the simplicity of the project did not require complex asynchronous handling.  
+> `createAsyncThunk` and extra reducers were used to manage async operations, although not all use cases are covered — some logic, like form validation and UI feedback, is handled directly within the frontend components.  
+> **React Router** (basic version) was used for client-side routing. More advanced solutions like the **Data Router** API were not necessary, as the project did not require built-in loaders, prefetching, or deferred data handling.
 
-## License
+## Future Improvements
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+- **Pagination edge case:** When deleting the last superhero on a page, the pagination does not remove the now-empty page. This will be fixed to provide a smoother user experience.
+- **Edit form visuals:** The UI for the image upload section in the hero edit form will be visually improved to provide clearer feedback and better styling.
+- **Styling enhancements:** General improvements to layout and styles are planned, especially for responsiveness and consistency.
+- **Redux state improvements:** Error handling in Redux will be extended — currently, the state only accounts for errors during the list fetch. In the future, separate error states will be added for fetching a single superhero and other specific operations.
