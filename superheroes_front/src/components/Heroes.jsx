@@ -18,7 +18,7 @@ const HomePage = () => {
   return (
     <div style={{ height: '60vh' }}>
       {heroes.map((h) => (
-        <Hero key={h._id} id={h._id} name={h.name} />
+        <Hero key={h._id} id={h._id} name={h.name} avatarUrl={h.images[0]} />
       ))}
     </div>
   );

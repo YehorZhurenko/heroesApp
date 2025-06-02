@@ -52,8 +52,8 @@ const DetailsPage = ({ name }) => {
 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <CustomSlider>
-            {images.map((image, index) => {
-              return <img key={index} src={image.imgURL} alt={image.imgAlt} />;
+            {hero.images.map((image, index) => {
+              return <img key={index} src={image} alt={image.imgAlt} />;
             })}
           </CustomSlider>
         </div>

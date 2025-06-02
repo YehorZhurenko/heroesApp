@@ -10,6 +10,36 @@ const EditPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const uploadToCloudinary = async (file, fileIndex, heroName) => {
+    const url = `https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload`;
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'heroPres');
+
+    const safeName = heroName
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, '_')
+      .replace(/[^\w\-]/g, '');
+    const publicId = `${safeName}_${fileIndex + 1}`;
+
+    formData.append('public_id', publicId);
+    formData.append('overwrite', 'true');
+
+    const response = await fetch(url, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Upload failed for image ${fileIndex + 1}`);
+    }
+
+    const data = await response.json();
+    return data.secure_url;
+  };
+
   const [formData, setFormData] = useState({
     name: '',
     real_name: '',
@@ -102,22 +132,28 @@ const EditPage = () => {
     if (Object.keys(validationErrors).length > 0) return;
 
     const nickname = formData.name.trim().toLowerCase().replace(/\s+/g, '_');
-    const newImageUrls = [1, 2, 3, 4].map(
-      (i) => `https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/${nickname}_${i}.jpg`,
-    );
-
-    const payload = {
-      name: formData.name,
-      real_name: formData.real_name,
-      origin_description: formData.origin_description,
-      catch_phrase: formData.catch_phrase,
-      superpowers: formData.superpowers,
-      images: newImageUrls,
-    };
 
     try {
-      dispatch(updateHero({ id, updatedHero: payload }));
+      const uploadedImages = await Promise.all(
+        newFiles.map(async (file, index) => {
+          if (file) {
+            return await uploadToCloudinary(file, index, formData.name);
+          } else {
+            return formData.images[index]; // сохранить прежний URL
+          }
+        }),
+      );
 
+      const payload = {
+        name: formData.name,
+        real_name: formData.real_name,
+        origin_description: formData.origin_description,
+        catch_phrase: formData.catch_phrase,
+        superpowers: formData.superpowers,
+        images: uploadedImages,
+      };
+
+      await dispatch(updateHero({ id, updatedHero: payload }));
       navigate(-1);
     } catch (error) {
       console.error('Update error:', error);

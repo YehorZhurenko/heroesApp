@@ -1,18 +1,14 @@
 import Pagination from '../components/Pagination';
 import Heroes from '../components/Heroes';
-
 import { Link } from 'react-router-dom';
+import styles from '../styles/modules/HomePage.module.css';
 
 const HomePage = () => {
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
-      <Link to="/create">Add new hero</Link>
+    <div className={styles.container}>
+      <Link to="/create" className={styles.addLink}>
+        Add new hero
+      </Link>
       <Heroes />
       <Pagination />
     </div>

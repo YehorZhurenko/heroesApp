@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { useDispatch } from 'react-redux';
-import { createHero } from '../redux/slices/heroSlice';
+import { createHero, fetchHero, fetchHeroes } from '../redux/slices/heroSlice';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -16,13 +16,31 @@ const CreatePage = () => {
   });
 
   const [previewUrls, setPreviewUrls] = useState([null, null, null, null]);
-  const [picFiles, setPicFiles] = useState([null, null, null, null]);
-  const [picUrl, setPicUrl] = useState([null, null, null, null]);
 
   const dispatch = useDispatch();
   const [errors, setErrors] = useState({});
 
   const navigate = useNavigate();
+
+  const uploadToCloudinary = async (file, fileIndex) => {
+    const url = `https://api.cloudinary.com/v1_1/dxtxfqhqw/image/upload`;
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'heroPres'); // set this in Cloudinary
+
+    const response = await fetch(url, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Upload failed for image ${fileIndex + 1}`);
+    }
+
+    const data = await response.json();
+    return data.secure_url; // this is the public URL to use
+  };
 
   const validate = () => {
     const newErrors = {};
@@ -90,21 +108,25 @@ const CreatePage = () => {
     setErrors(validationErrors);
     if (Object.keys(validationErrors).length > 0) return;
 
-    const nickname = formData.name.trim().toLowerCase().replace(/\s+/g, '_');
-    const cloudinaryUrls = generateImageUrls(nickname);
-
-    const payload = {
-      name: formData.name,
-      real_name: formData.real_name,
-      origin_description: formData.origin_description,
-      catch_phrase: formData.catch_phrase,
-      superpowers: formData.superpowers,
-      images: cloudinaryUrls, // only URLs, no file content
-    };
-
     try {
+      // 1. Upload all images to Cloudinary
+      const uploadedUrls = await Promise.all(
+        formData.images.map((file, index) => uploadToCloudinary(file, index)),
+      );
+
+      // 2. Construct the payload
+      const payload = {
+        name: formData.name,
+        real_name: formData.real_name,
+        origin_description: formData.origin_description,
+        catch_phrase: formData.catch_phrase,
+        superpowers: formData.superpowers,
+        images: uploadedUrls,
+      };
+
+      // 3. Dispatch and redirect
       dispatch(createHero(payload));
-      navigate('/heroes/');
+      navigate('/heroes');
     } catch (error) {
       console.error('Submission error:', error);
       alert('Failed to create hero.');

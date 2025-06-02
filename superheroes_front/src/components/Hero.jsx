@@ -4,15 +4,16 @@ import { useNavigate, Link } from 'react-router-dom';
 
 import defaultHeroImg from '../assets/default-hero.png';
 
-const Hero = ({ id, name, imageUrl }) => {
+const Hero = ({ id, name, avatarUrl }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  console.log(avatarUrl);
+
   return (
     <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
-      {/* Small Image on the Left */}
       <img
-        src={imageUrl || defaultHeroImg}
+        src={avatarUrl || defaultHeroImg}
         alt={name}
         style={{
           width: '60px',
