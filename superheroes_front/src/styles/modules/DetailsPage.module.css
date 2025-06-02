@@ -1,0 +1,77 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #f8f8f8;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.loading {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 1.2rem;
+}
+
+.title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.realName {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.origin {
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.superpowers {
+  margin-bottom: 1rem;
+}
+
+.superpowers ul {
+  padding-left: 20px;
+}
+
+.catchPhrase {
+  font-style: italic;
+  margin-bottom: 1.5rem;
+}
+
+.imagesSection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+  margin-top: 100px;
+  text-align: center;
+}
+
+.image {
+  max-height: 300px;
+  object-fit: contain;
+  margin: 0 10px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+button {
+  padding: 10px 20px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #1976d2;
+  color: white;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: #155ca1;
+}

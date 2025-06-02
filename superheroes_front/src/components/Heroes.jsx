@@ -1,15 +1,12 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, redirect, useNavigate } from 'react-router-dom';
 
-import { fetchHeroes, deleteHero } from '../redux/slices/heroSlice';
+import { fetchHeroes } from '../redux/slices/heroSlice';
 import Hero from './Hero';
 
-const HomePage = () => {
+const Heroes = () => {
   const { heroes } = useSelector((state) => state.hero);
   const dispatch = useDispatch();
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(fetchHeroes({ page: 1 }));
@@ -24,4 +21,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default Heroes;

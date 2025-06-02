@@ -4,9 +4,9 @@ import { useEffect } from 'react';
 
 import { fetchHero } from '../redux/slices/heroSlice';
 import CustomSlider from '../components/custom.slider';
-import images from '../data/images';
+import styles from '../styles/modules/DetailsPage.module.css';
 
-const DetailsPage = ({ name }) => {
+const DetailsPage = () => {
   const dispatch = useDispatch();
   const { heroDetails: hero, status } = useSelector((state) => state.hero);
   const { id } = useParams();
@@ -17,50 +17,64 @@ const DetailsPage = ({ name }) => {
   const segms = location.pathname.split('/').slice(1, -1);
 
   useEffect(() => {
-    dispatch(fetchHero(id));
-  }, [dispatch, id]);
+    if (!hero || hero._id !== id) {
+      dispatch(fetchHero(id));
+    }
+  }, [dispatch, id, hero]);
 
   if (status === 'loading') {
-    return <div>loading...</div>;
+    return <div className={styles.loading}>Loading...</div>;
   }
 
-  if (status === 'resolved')
+  if (status === 'resolved') {
     return (
-      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-        <h1>
+      <div className={styles.container}>
+        <h1 className={styles.title}>
           {segms.map((s) => `${s} > `)}
-
           {hero.name}
         </h1>
-        <h2>Real Name: {hero.real_name}</h2>
-        <p>
+
+        <h2 className={styles.realName}>Real Name: {hero.real_name}</h2>
+
+        <p className={styles.origin}>
           <strong>Origin:</strong> {hero.origin_description}
         </p>
 
-        <h3>Superpowers</h3>
-        <ul>
-          {hero.superpowers.map((power, index) => (
-            <li key={index}>{power}</li>
-          ))}
-        </ul>
+        <div className={styles.superpowers}>
+          <h3>Superpowers</h3>
+          <ul>
+            {hero.superpowers.map((power, index) => (
+              <li key={index}>{power}</li>
+            ))}
+          </ul>
+        </div>
 
-        <p>
+        <p className={styles.catchPhrase}>
           <strong>Catch Phrase:</strong> <em>{hero.catch_phrase}</em>
         </p>
 
-        <h3>Images</h3>
-
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className={styles.imagesSection}>
           <CustomSlider>
-            {hero.images.map((image, index) => {
-              return <img key={index} src={image} alt={image.imgAlt} />;
-            })}
+            {hero.images.map((image, index) => (
+              <img
+                key={index}
+                src={image}
+                alt={`Hero image ${index + 1}`}
+                className={styles.image}
+              />
+            ))}
           </CustomSlider>
         </div>
-        <button onClick={() => navigate(-1)}>back</button>
-        <button onClick={() => navigate(`/edit/${id}`)}>edit</button>
+
+        <div className={styles.buttons}>
+          <button onClick={() => navigate(-1)}>Back</button>
+          <button onClick={() => navigate(`/edit/${id}`)}>Edit</button>
+        </div>
       </div>
     );
+  }
+
+  return null;
 };
 
 export default DetailsPage;

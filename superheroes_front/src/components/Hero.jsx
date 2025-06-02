@@ -3,6 +3,7 @@ import { deleteHero } from '../redux/slices/heroSlice';
 import { useNavigate, Link } from 'react-router-dom';
 
 import defaultHeroImg from '../assets/default-hero.png';
+import styles from '../styles/modules/Hero.module.css';
 
 const Hero = ({ id, name, avatarUrl }) => {
   const dispatch = useDispatch();
@@ -11,32 +12,21 @@ const Hero = ({ id, name, avatarUrl }) => {
   console.log(avatarUrl);
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
-      <img
-        src={avatarUrl || defaultHeroImg}
-        alt={name}
-        style={{
-          width: '60px',
-          height: '60px',
-          objectFit: 'cover',
-          borderRadius: '50%',
-          marginRight: '1rem',
-        }}
-      />
+    <div className={styles.heroContainer}>
+      <img src={avatarUrl || defaultHeroImg} alt={name} className={styles.avatar} />
 
-      {/* Hero Info & Buttons */}
-      <div>
-        <Link to={`/heroes/${id}`}>
-          <h1 style={{ margin: 0 }}>{name}</h1>
+      <div className={styles.info}>
+        <Link to={`/heroes/${id}`} className={styles.nameLink}>
+          <h1 className={styles.name}>{name}</h1>
         </Link>
-        <button onClick={() => navigate(`/edit/${id}`)}>edit</button>
-        <button
-          onClick={async () => {
-            dispatch(deleteHero({ id }));
-            // navigate('/heroes');
-          }}>
-          delete
-        </button>
+        <div className={styles.buttons}>
+          <button className={styles.editButton} onClick={() => navigate(`/edit/${id}`)}>
+            Edit
+          </button>
+          <button className={styles.deleteButton} onClick={() => dispatch(deleteHero({ id }))}>
+            Delete
+          </button>
+        </div>
       </div>
     </div>
   );

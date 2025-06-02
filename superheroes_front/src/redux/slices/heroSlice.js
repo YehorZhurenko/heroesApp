@@ -10,35 +10,41 @@ export const fetchHeroes = createAsyncThunk('hero/fetchHeroes', async (params) =
   return res;
 });
 
-export const fetchHero = createAsyncThunk('hero/fetchHero', async (heroId, { rejectWithValue }) => {
-  const heroUrl = `http://localhost:3000/heroes/${heroId}`;
+export const fetchHero = createAsyncThunk(
+  'hero/fetchHero',
+  async (heroId, { rejectWithValue, dispatch }) => {
+    const heroUrl = `http://localhost:3000/heroes/${heroId}`;
 
-  try {
-    const response = await fetch(heroUrl);
+    try {
+      const response = await fetch(heroUrl);
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.message);
     }
-
-    const data = await response.json();
-    return data;
-  } catch (err) {
-    return rejectWithValue(err.message);
-  }
-});
+  },
+);
 
 export const createHero = createAsyncThunk(
   'hero/createHero',
-  async (props, { rejectWithValue }) => {
-    console.log(props);
-
-    axios
+  async (props, { rejectWithValue, dispatch }) => {
+    const res = axios
       .post('http://localhost:3000/heroes/new', props)
       .then((res) => {
-        console.log(res);
-        return res;
+        dispatch(addHero(res.data));
+        return res.data;
       })
       .catch((err) => rejectWithValue(err));
+
+    console.log('createHero response: ');
+    console.log(res);
+
+    return res;
   },
 );
 
@@ -101,14 +107,10 @@ export const heroSlice = createSlice({
     error: null,
   },
   reducers: {
-    increment: (state) => {
-      state.value += 1;
-    },
-    decrement: (state) => {
-      state.value -= 1;
-    },
-    incrementByAmount: (state, action) => {
-      state.value += action.payload;
+    addHero(state, action) {
+      state.heroes.push(action.payload);
+      state.heroDetails = action.payload;
+      console.log(action.payload._id);
     },
   },
 
@@ -118,6 +120,8 @@ export const heroSlice = createSlice({
         state.heroes = [];
       })
       .addCase(fetchHeroes.fulfilled, (state, action) => {
+        console.log();
+
         state.heroes = action.payload.heroes;
         state.totalPages = action.payload.totalPages;
       })
@@ -125,7 +129,6 @@ export const heroSlice = createSlice({
         state.heroes = [];
       })
       .addCase(fetchHero.pending, (state, action) => {
-        state.heroDetails = null;
         state.status = 'loading';
       })
       .addCase(fetchHero.fulfilled, (state, action) => {
@@ -152,10 +155,14 @@ export const heroSlice = createSlice({
         state.heroes = state.heroes.filter((f) => f._id !== action.payload._id);
         state.status = 'resolved';
         state.error = null;
+      })
+      .addCase(updateHero.fulfilled, (state, action) => {
+        state.heroDetails = action.payload;
+        state.status = 'resolved';
       });
   },
 });
 
-export const { increment, decrement, incrementByAmount } = heroSlice.actions;
+export const { increment, decrement, incrementByAmount, addHero } = heroSlice.actions;
 
 export default heroSlice.reducer;

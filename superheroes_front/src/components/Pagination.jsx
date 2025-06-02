@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchHeroes } from '../redux/slices/heroSlice';
+import styles from '../styles/modules/Pagination.module.css';
 
 const Pagination = () => {
   console.log('Pagination rendered');
@@ -13,10 +14,11 @@ const Pagination = () => {
   }
 
   return (
-    <div>
+    <div className={styles.container}>
       {buttons.map((i) => (
         <button
           key={i}
+          className={styles.pageButton}
           onClick={() => {
             console.log(`page: ${i}`);
             dispatch(fetchHeroes({ page: i }));
