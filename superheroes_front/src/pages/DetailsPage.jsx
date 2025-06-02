@@ -3,6 +3,8 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 
 import { fetchHero } from '../redux/slices/heroSlice';
+import CustomSlider from '../components/custom.slider';
+import images from '../data/images';
 
 const DetailsPage = ({ name }) => {
   const dispatch = useDispatch();
@@ -47,7 +49,16 @@ const DetailsPage = ({ name }) => {
         </p>
 
         <h3>Images</h3>
+
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <CustomSlider>
+            {images.map((image, index) => {
+              return <img key={index} src={image.imgURL} alt={image.imgAlt} />;
+            })}
+          </CustomSlider>
+        </div>
         <button onClick={() => navigate(-1)}>back</button>
+        <button onClick={() => navigate(`/edit/${id}`)}>edit</button>
       </div>
     );
 };

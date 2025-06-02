@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import axios from 'axios';
 
 import { useDispatch } from 'react-redux';
 import { createHero } from '../redux/slices/heroSlice';
@@ -17,6 +16,9 @@ const CreatePage = () => {
   });
 
   const [previewUrls, setPreviewUrls] = useState([null, null, null, null]);
+  const [picFiles, setPicFiles] = useState([null, null, null, null]);
+  const [picUrl, setPicUrl] = useState([null, null, null, null]);
+
   const dispatch = useDispatch();
   const [errors, setErrors] = useState({});
 
@@ -65,6 +67,8 @@ const CreatePage = () => {
 
   const handleFileChange = (e, index) => {
     const file = e.target.files[0] || null;
+    console.log(file);
+    console.log(`index: ${index}`);
     const updatedImages = [...formData.images];
     const updatedPreviews = [...previewUrls];
 
@@ -100,7 +104,7 @@ const CreatePage = () => {
 
     try {
       dispatch(createHero(payload));
-      alert('Hero created successfully!');
+      navigate('/heroes/');
     } catch (error) {
       console.error('Submission error:', error);
       alert('Failed to create hero.');
@@ -219,7 +223,9 @@ const CreatePage = () => {
           {errors.images && <div style={{ color: 'red' }}>{errors.images}</div>}
         </div>
 
-        <button style={{ padding: '10px 20px', marginRight: '20px' }} onLick={() => navigate(-1)}>
+        <button
+          style={{ padding: '10px 20px', marginRight: '20px' }}
+          onClick={() => navigate('/heroes/')}>
           Back
         </button>
         <button type="submit" style={{ padding: '10px 20px' }}>
