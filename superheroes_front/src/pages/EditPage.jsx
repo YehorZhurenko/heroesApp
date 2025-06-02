@@ -11,7 +11,7 @@ const EditPage = () => {
   const navigate = useNavigate();
 
   const uploadToCloudinary = async (file, fileIndex, heroName) => {
-    const url = `https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload`;
+    const url = `https://api.cloudinary.com/v1_1/dxtxfqhqw/image/upload`;
 
     const formData = new FormData();
     formData.append('file', file);
@@ -23,9 +23,6 @@ const EditPage = () => {
       .replace(/\s+/g, '_')
       .replace(/[^\w\-]/g, '');
     const publicId = `${safeName}_${fileIndex + 1}`;
-
-    formData.append('public_id', publicId);
-    formData.append('overwrite', 'true');
 
     const response = await fetch(url, {
       method: 'POST',
@@ -57,7 +54,9 @@ const EditPage = () => {
     const fetchNEdit = async () => {
       try {
         const data = await dispatch(fetchHero(id)).unwrap();
-        console.log(data);
+
+        const filledImages = [...(data.images || [])];
+        while (filledImages.length < 4) filledImages.push(null);
 
         setFormData({
           name: data.name,
@@ -65,9 +64,11 @@ const EditPage = () => {
           origin_description: data.origin_description,
           superpowers: data.superpowers || [''],
           catch_phrase: data.catch_phrase,
-          images: data.images || [null, null, null, null],
+          images: filledImages,
         });
-        setPreviewUrls(data.images);
+
+        setPreviewUrls(filledImages);
+        setNewFiles([null, null, null, null]); // reset new files
       } catch (error) {
         console.error('Failed to fetch hero:', error);
       }
@@ -139,11 +140,10 @@ const EditPage = () => {
           if (file) {
             return await uploadToCloudinary(file, index, formData.name);
           } else {
-            return formData.images[index]; // сохранить прежний URL
+            return formData.images[index]; // оставить старое изображение
           }
         }),
       );
-
       const payload = {
         name: formData.name,
         real_name: formData.real_name,
@@ -251,7 +251,7 @@ const EditPage = () => {
         <div style={{ marginBottom: '10px' }}>
           <label>Replace Images (optional):</label>
           {previewUrls.map((url, index) => (
-            <div key={index} style={{ marginTop: '5px' }}>
+            <div key={index} style={{ marginTop: '10px' }}>
               <input type="file" accept="image/*" onChange={(e) => handleFileChange(e, index)} />
               {url && (
                 <img

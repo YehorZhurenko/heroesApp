@@ -14,10 +14,11 @@
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
+  color: rgb(0, 0, 0);
 }
 
 .pageButton:hover {
   background-color: #007bff;
-  color: white;
+  color: rgb(0, 0, 0);
   border-color: #007bff;
 }
