@@ -1,50 +1,39 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-export const fetchHeroes = createAsyncThunk('hero/fetchHeroes', async (params) => {
-  const page = params.page || 1;
+const API_BASE = 'http://localhost:3000/heroes';
 
-  const heroUrl = `http://localhost:3000/heroes/?page=${page}`;
-  const res = await fetch(heroUrl).then((res) => res.json());
-
-  return res;
-});
-
-export const fetchHero = createAsyncThunk(
-  'hero/fetchHero',
-  async (heroId, { rejectWithValue, dispatch }) => {
-    const heroUrl = `http://localhost:3000/heroes/${heroId}`;
-
+export const fetchHeroes = createAsyncThunk(
+  'hero/fetchHeroes',
+  async ({ page = 1 }, { rejectWithValue }) => {
     try {
-      const response = await fetch(heroUrl);
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      return data;
+      const response = await axios.get(`${API_BASE}/?page=${page}`);
+      return response.data;
     } catch (err) {
       return rejectWithValue(err.message);
     }
   },
 );
 
+export const fetchHero = createAsyncThunk('hero/fetchHero', async (heroId, { rejectWithValue }) => {
+  try {
+    const response = await axios.get(`${API_BASE}/${heroId}`);
+    return response.data;
+  } catch (err) {
+    return rejectWithValue(err.message);
+  }
+});
+
 export const createHero = createAsyncThunk(
   'hero/createHero',
-  async (props, { rejectWithValue, dispatch }) => {
-    const res = axios
-      .post('http://localhost:3000/heroes/new', props)
-      .then((res) => {
-        dispatch(addHero(res.data));
-        return res.data;
-      })
-      .catch((err) => rejectWithValue(err));
-
-    console.log('createHero response: ');
-    console.log(res);
-
-    return res;
+  async (heroData, { rejectWithValue, dispatch }) => {
+    try {
+      const response = await axios.post(`${API_BASE}/new`, heroData);
+      dispatch(addHero(response.data));
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
   },
 );
 
@@ -52,21 +41,12 @@ export const updateHero = createAsyncThunk(
   'hero/updateHero',
   async ({ id, updatedHero }, { rejectWithValue }) => {
     try {
-      const response = await fetch(`http://localhost:3000/heroes/${id}`, {
-        method: 'PUT',
+      const response = await axios.put(`${API_BASE}/${id}`, updatedHero, {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(updatedHero),
       });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      console.log('Hero updated:', data);
-      return data;
+      return response.data;
     } catch (err) {
       return rejectWithValue(err.message);
     }
@@ -76,20 +56,9 @@ export const updateHero = createAsyncThunk(
 export const deleteHero = createAsyncThunk(
   'hero/deleteHero',
   async ({ id }, { rejectWithValue }) => {
-    console.log(`deleting hero #${id}`);
-
     try {
-      const response = await fetch(`http://localhost:3000/heroes/${id}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      console.log('Hero deleted:', data);
-      return data;
+      const response = await axios.delete(`${API_BASE}/${id}`);
+      return response.data;
     } catch (err) {
       return rejectWithValue(err.message);
     }
@@ -99,7 +68,6 @@ export const deleteHero = createAsyncThunk(
 export const heroSlice = createSlice({
   name: 'hero',
   initialState: {
-    value: 0,
     heroes: [],
     heroDetails: null,
     totalPages: null,
@@ -116,49 +84,86 @@ export const heroSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
+
+      // ───────────── FETCH HEROES ─────────────
+
       .addCase(fetchHeroes.pending, (state) => {
+        state.status = 'loading';
         state.heroes = [];
+        state.error = null;
       })
       .addCase(fetchHeroes.fulfilled, (state, action) => {
-        console.log();
-
+        state.status = 'resolved';
         state.heroes = action.payload.heroes;
         state.totalPages = action.payload.totalPages;
       })
       .addCase(fetchHeroes.rejected, (state, action) => {
+        state.status = 'rejected';
         state.heroes = [];
+        state.error = action.payload;
       })
+
+      // ───────────── FETCH SINGLE HERO ─────────────
+
       .addCase(fetchHero.pending, (state, action) => {
         state.status = 'loading';
+        state.heroDetails = null;
+        state.error = null;
       })
       .addCase(fetchHero.fulfilled, (state, action) => {
         state.heroDetails = action.payload;
         state.status = 'resolved';
       })
       .addCase(fetchHero.rejected, (state, action) => {
-        state.heroDetails = null;
         state.status = 'rejected';
+        state.heroDetails = null;
         state.error = action.payload;
       })
+
+      // ───────────── CREATE HERO ─────────────
+
       .addCase(createHero.fulfilled, (state, action) => {
         state.heroDetails = action.payload;
         state.status = 'resolved';
       })
+      .addCase(createHero.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
       .addCase(createHero.rejected, (state, action) => {
+        state.status = 'rejected';
         state.heroDetails = null;
+        state.error = action.payload;
+      })
+
+      // ───────────── DELETE HERO ─────────────
+
+      .addCase(deleteHero.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(deleteHero.fulfilled, (state, action) => {
+        state.status = 'resolved';
+        state.heroes = state.heroes.filter((h) => h._id !== action.payload._id);
+      })
+      .addCase(deleteHero.rejected, (state, action) => {
         state.status = 'rejected';
         state.error = action.payload;
       })
 
-      .addCase(deleteHero.fulfilled, (state, action) => {
-        console.log(action.payload._id);
-        state.heroes = state.heroes.filter((f) => f._id !== action.payload._id);
-        state.status = 'resolved';
+      // ───────────── CREATE HERO ─────────────
+
+      .addCase(updateHero.pending, (state) => {
+        state.status = 'loading';
         state.error = null;
       })
       .addCase(updateHero.fulfilled, (state, action) => {
-        state.heroDetails = action.payload;
         state.status = 'resolved';
+        state.heroDetails = action.payload;
+      })
+      .addCase(updateHero.rejected, (state, action) => {
+        state.status = 'rejected';
+        state.error = action.payload;
       });
   },
 });
