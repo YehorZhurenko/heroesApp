@@ -8,6 +8,7 @@ export const fetchHeroes = createAsyncThunk(
   async ({ page = 1 }, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${API_BASE}/?page=${page}`);
+
       return response.data;
     } catch (err) {
       return rejectWithValue(err.message);
@@ -15,9 +16,10 @@ export const fetchHeroes = createAsyncThunk(
   },
 );
 
-export const fetchHero = createAsyncThunk('hero/fetchHero', async (heroId, { rejectWithValue }) => {
+export const fetchHero = createAsyncThunk('hero/fetchHero', async (id, { rejectWithValue }) => {
   try {
-    const response = await axios.get(`${API_BASE}/${heroId}`);
+    const response = await axios.get(`${API_BASE}/${id}`);
+
     return response.data;
   } catch (err) {
     return rejectWithValue(err.message);
@@ -106,12 +108,11 @@ export const heroSlice = createSlice({
 
       .addCase(fetchHero.pending, (state, action) => {
         state.status = 'loading';
-        state.heroDetails = null;
         state.error = null;
       })
       .addCase(fetchHero.fulfilled, (state, action) => {
-        state.heroDetails = action.payload;
         state.status = 'resolved';
+        state.heroDetails = action.payload;
       })
       .addCase(fetchHero.rejected, (state, action) => {
         state.status = 'rejected';

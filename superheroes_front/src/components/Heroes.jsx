@@ -5,11 +5,14 @@ import { fetchHeroes } from '../redux/slices/heroSlice';
 import Hero from './Hero';
 
 const Heroes = () => {
-  const { heroes } = useSelector((state) => state.hero);
   const dispatch = useDispatch();
+  const { heroes } = useSelector((state) => state.hero);
 
   useEffect(() => {
     dispatch(fetchHeroes({ page: 1 }));
+
+    console.log('from heroes.jsx');
+    console.log(heroes);
   }, [dispatch]);
 
   return (

@@ -17,16 +17,24 @@ const DetailsPage = () => {
   const segms = location.pathname.split('/').slice(1, -1);
 
   useEffect(() => {
-    if (!hero || hero._id !== id) {
-      dispatch(fetchHero(id));
+    console.log('DetailsPage');
+
+    dispatch(fetchHero(id));
+  }, [dispatch, id]);
+
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate('/');
     }
-  }, [dispatch, id, hero]);
+  };
 
   if (status === 'loading') {
     return <div className={styles.loading}>Loading...</div>;
   }
 
-  if (status === 'resolved') {
+  if (status === 'resolved' && hero) {
     return (
       <div className={styles.container}>
         <h1 className={styles.title}>
@@ -67,7 +75,7 @@ const DetailsPage = () => {
         </div>
 
         <div className={styles.buttons}>
-          <button onClick={() => navigate(-1)}>Back</button>
+          <button onClick={handleBack}>Back</button>
           <button onClick={() => navigate(`/edit/${id}`)}>Edit</button>
         </div>
       </div>
