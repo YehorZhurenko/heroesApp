@@ -85,8 +85,7 @@ const CreatePage = () => {
 
   const handleFileChange = (e, index) => {
     const file = e.target.files[0] || null;
-    console.log(file);
-    console.log(`index: ${index}`);
+
     const updatedImages = [...formData.images];
     const updatedPreviews = [...previewUrls];
 
@@ -95,11 +94,6 @@ const CreatePage = () => {
 
     setFormData((prev) => ({ ...prev, images: updatedImages }));
     setPreviewUrls(updatedPreviews);
-  };
-
-  const generateImageUrls = (nickname) => {
-    const baseUrl = 'https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/';
-    return [1, 2, 3, 4].map((i) => `${baseUrl}${nickname}_${i}.jpg`);
   };
 
   const handleSubmit = async (e) => {

@@ -9,8 +9,6 @@ const Hero = ({ id, name, avatarUrl }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  console.log(avatarUrl);
-
   return (
     <div className={styles.heroContainer}>
       <img src={avatarUrl || defaultHeroImg} alt={name} className={styles.avatar} />

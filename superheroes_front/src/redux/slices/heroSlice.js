@@ -78,7 +78,6 @@ export const heroSlice = createSlice({
     addHero(state, action) {
       state.heroes.push(action.payload);
       state.heroDetails = action.payload;
-      console.log(action.payload._id);
     },
   },
 
