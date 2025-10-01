@@ -94,7 +94,7 @@ The application provides the following functionalities:
 - **Redux state improvements:** Error handling in Redux will be extended — currently, the state only accounts for errors during the list fetch. In the future, separate error states will be added for fetching a single superhero and other specific operations.
 
 -  **Create Hero (demo):**  
-  ![Create Hero](./assets/ezgif-4bde700ed9c0b2.gif)
+  ![Create Hero](./assets/ezgif-4bc08318e135c0.gif)
 
 - **Edit Hero (demo):**  
-  ![Edit Hero](./assets/ezgif-4bc08318e135c0.gif)
+  ![Edit Hero](./assets/ezgif-4bde700ed9c0b2.gif)
