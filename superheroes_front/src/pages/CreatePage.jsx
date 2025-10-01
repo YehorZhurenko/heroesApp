@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { useDispatch } from 'react-redux';
-import { createHero, fetchHero, fetchHeroes } from '../redux/slices/heroSlice';
+import { createHero } from '../redux/slices/heroSlice';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -120,7 +120,7 @@ const CreatePage = () => {
 
       // 3. Dispatch and redirect
       dispatch(createHero(payload));
-      navigate('/heroes');
+      navigate('/');
     } catch (error) {
       console.error('Submission error:', error);
       alert('Failed to create hero.');

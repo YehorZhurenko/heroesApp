@@ -4,7 +4,6 @@ import { useNavigate, Link } from 'react-router-dom';
 
 import defaultHeroImg from '../assets/default-hero.png';
 import styles from '../styles/modules/Hero.module.css';
-import { useEffect } from 'react';
 
 const Hero = ({ id, name, avatarUrl }) => {
   const dispatch = useDispatch();
